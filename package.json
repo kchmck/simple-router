@@ -6,6 +6,7 @@
   "files": ["lib"],
   "author": "Mick Koch <mick@kochm.co>",
   "license": "MIT",
+  "repository": "https://github.com/kchmck/simple-router",
   "scripts": {
       "prepublish": "make build"
   },
