@@ -52,7 +52,7 @@ export default function createRouter() {
                           if (done) {
                               reject();
                           } else {
-                              value.then(resolve);
+                              value.then(resolve, reject);
                           }
                       }));
     }
