@@ -1,7 +1,7 @@
 {
   "name": "@kchmck/simple-router",
   "description": "Simple promise-based router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib",
   "files": ["lib"],
   "author": "Mick Koch <mick@kochm.co>",
