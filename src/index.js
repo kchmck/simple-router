@@ -1,5 +1,3 @@
-import "babel-polyfill";
-
 import pathToRegexp from "path-to-regexp";
 
 export default function createRouter() {
