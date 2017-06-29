@@ -43,16 +43,9 @@ export default function createRouter() {
     function handlePath(origLoc) {
         let loc = resolvePath(origLoc);
 
-        return Promise.all(lookup(common, loc))
-                      .then(() => new Promise((resolve, reject) => {
-                          let {done, value} = lookup(routes, loc).next();
+        for (let _ of lookup(common, loc)) {}
 
-                          if (done) {
-                              reject();
-                          } else {
-                              value.then(resolve, reject);
-                          }
-                      }));
+        lookup(routes, loc).next();
     }
 
     return {
