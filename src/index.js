@@ -1,7 +1,6 @@
 import pathToRegexp from "path-to-regexp";
 
 export default function createRouter() {
-    let redirects = [];
     let routes = [];
     let common = [];
 
@@ -23,23 +22,7 @@ export default function createRouter() {
         }
     }
 
-    function resolvePath(origLoc) {
-        let loc = Object.assign({}, origLoc);
-
-        for (;;) {
-            let {value} = lookup(redirects, loc).next();
-
-            if (!value) {
-                return loc;
-            }
-
-            loc.pathname = value;
-        }
-    }
-
-    function handlePath(origLoc) {
-        let loc = resolvePath(origLoc);
-
+    function handlePath(loc) {
         for (let _ of lookup(common, loc)) {}
 
         lookup(routes, loc).next();
@@ -48,8 +31,6 @@ export default function createRouter() {
     return {
         addRoute: (path, fn) => add(routes, path, fn),
         addCommon: (path, fn) => add(common, path, fn),
-        addRedirect: (path, fn) => add(redirects, path, fn),
-        resolvePath,
         handlePath,
     };
 }
