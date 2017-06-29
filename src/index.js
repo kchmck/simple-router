@@ -7,11 +7,8 @@ export default function createRouter() {
 
     function add(list, path, fn) {
         list.push([pathToRegexp(path), fn]);
+        return this;
     }
-
-    function addRedirect(path, fn) { add(redirects, path, fn); return this; }
-    function addRoute(path, fn) { add(routes, path, fn); return this; }
-    function addCommon(path, fn) { add(common, path, fn); return this; }
 
     function* lookup(list, loc) {
         for (let [re, fn] of list) {
@@ -49,9 +46,9 @@ export default function createRouter() {
     }
 
     return {
-        addRoute,
-        addCommon,
-        addRedirect,
+        addRoute: (path, fn) => add(routes, path, fn),
+        addCommon: (path, fn) => add(common, path, fn),
+        addRedirect: (path, fn) => add(redirects, path, fn),
         resolvePath,
         handlePath,
     };
