@@ -5,32 +5,42 @@ export default function createRouter() {
     let common = [];
 
     function add(list, path, fn) {
-        list.push([pathToRegexp(path), fn]);
-        return this;
+        list.push(new Route(path, fn));
     }
 
-    function* lookup(list, loc) {
-        for (let [re, fn] of list) {
-            let ret = re.exec(loc.pathname);
-
-            if (ret === null) {
-                continue;
-            }
-
-            let [_, ...params] = ret;
-            yield fn(...params, loc);
-        }
-    }
+    function addRoute(path, fn) { add(routes, path, fn); return this; }
+    function addCommon(path, fn) { add(common, path, fn); return this; }
 
     function handlePath(loc) {
-        for (let _ of lookup(common, loc)) {}
-
-        lookup(routes, loc).next();
+        lookup(common, loc, () => true);
+        lookup(routes, loc, () => false);
     }
 
     return {
-        addRoute: (path, fn) => add(routes, path, fn),
-        addCommon: (path, fn) => add(common, path, fn),
+        addRoute,
+        addCommon,
         handlePath,
     };
 }
+
+function lookup(list, loc, continueFn) {
+    list.every(route => route.handle(loc) === null || continueFn());
+}
+
+function Route(path, fn) {
+    this.regex = pathToRegexp(path);
+    this.fn = fn;
+}
+
+Route.prototype.handle = function(loc) {
+    let params = this.regex.exec(loc.pathname);
+
+    if (params === null) {
+        return null;
+    }
+
+    params.shift();
+    params.push(loc);
+
+    return this.fn.apply(null, params);
+};
